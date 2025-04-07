@@ -1,25 +1,15 @@
-import { defineAuth } from "@aws-amplify/backend";
+import { referenceAuth } from "@aws-amplify/backend";
 
 /**
- * Define and configure your auth resource
+ * Reference an existing auth resource
  * @see https://docs.amplify.aws/gen2/build-a-backend/auth
  */
-export const auth = defineAuth({
-  loginWith: {
-    email: true,
-  },
-  resources: {
-    userPool: {
-      type: AuthResources.COGNITO_USER_POOL_REFERENCE,
-      options: {
-        userPoolId: 'ap-southeast-1_WBHlZF1Zf',
-      }
-    },
-    userPoolClient: {
-      type: AuthResources.COGNITO_USER_POOL_CLIENT_REFERENCE,
-      options: {
-        userPoolClientId: '1a30q7fmhmlqotc1abo9493bk2', // 替换为你的 App Client ID
-      }
-    }
-  }
+export const auth = referenceAuth({
+  // Use existing Cognito User Pool  
+  userPoolId: process.env.MY_USER_POOL_ID || 'ap-southeast-1_placeholder',
+  userPoolClientId: process.env.MY_USER_POOL_CLIENT_ID || 'placeholder-client-id',
+  // Required fields for referenceAuth
+  identityPoolId: process.env.MY_IDENTITY_POOL_ID || 'ap-southeast-1:placeholder-identity-pool-id',
+  authRoleArn: process.env.MY_AUTH_ROLE_ARN || 'arn:aws:iam::placeholder:role/amplify-xPA-auth-role',
+  unauthRoleArn: process.env.MY_UNAUTH_ROLE_ARN || 'arn:aws:iam::placeholder:role/amplify-xPA-unauth-role'
 });

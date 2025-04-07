@@ -1,14 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-// Temporarily disable Amplify configuration for local testing
-// import { Amplify } from 'aws-amplify';
-// import config from '@/amplify/backend';
-
-// Configure Amplify
-// Amplify.configure(config, {
-//   ssr: true // Enable server-side rendering
-// });
+import { Providers } from './providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="min-h-screen bg-gray-50">
-          {children}
-        </div>
+        <Providers>
+          <div className="min-h-screen bg-gray-50">
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );

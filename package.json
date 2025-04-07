@@ -2,6 +2,9 @@
   "name": "xpa",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,22 +12,34 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@aws-amplify/ui-react": "^6.5.5",
-    "aws-amplify": "^6.6.6",
-    "next": "^15.0.0",
+    "@aws-amplify/ui-react": "^6.10.0",
+    "@aws-amplify/ui-react-ai": "^1.0.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.496.0",
+    "@aws-sdk/client-textract": "^3.496.0",
+    "@headlessui/react": "^2.0.0",
+    "@heroicons/react": "^2.1.1",
+    "aws-amplify": "^6.14.1",
+    "next": "^15.2.4",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
-    "@aws-amplify/backend": "^1.5.1",
-    "@aws-amplify/backend-cli": "^1.3.0",
+    "@aws-amplify/backend": "^1.15.0",
+    "@aws-amplify/backend-cli": "^1.5.0",
+    "@aws-amplify/data-schema": "^1.20.3",
+    "@tailwindcss/forms": "^0.5.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.16",
     "aws-cdk": "^2",
     "aws-cdk-lib": "^2",
     "constructs": "^10.3.0",
-    "esbuild": "^0.23.1",
+    "esbuild": "^0.25.2",
+    "eslint": "9.24.0",
+    "eslint-config-next": "15.2.4",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
     "tsx": "^4.19.0",
     "typescript": "^5.6.2"
   }

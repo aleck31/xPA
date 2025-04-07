@@ -43,8 +43,6 @@ xPA/
 │   ├── layout.tsx      # Root layout
 │   └── page.tsx        # Landing page
 ├── docs/                    # Project documentation
-│   ├── xPA_Feature_Plan.md  # Detailed feature plan
-│   └── System_Architecture.md # System architecture documentation
 └── package.json         # Project dependencies
 ```
 
@@ -60,10 +58,12 @@ xPA/
 
 ### Installation
 
+[TBD]
+
 ## Documentation
 
-- [Feature Plan](./xPA_Feature_Plan.md): Detailed plan of features for the initial and future versions
-- [System Architecture](./System_Architecture.md): Overview of the system architecture and component interactions
+- [Feature Plan](docs/xPA_Feature_Plan.md): Detailed plan of features for the initial and future versions
+- [System Architecture](docs/System_Architecture.md): Overview of the system architecture and component interactions
 
 ## Roadmap
 
