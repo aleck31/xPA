@@ -1,19 +1,52 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { fetchAuthSession } from 'aws-amplify/auth/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { runWithAmplifyServerContext } from './utils/amplifyServerUtils';
 
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-  // Skip Amplify configuration for static routes
-  if (request.nextUrl.pathname === '/_not-found' || 
-      request.nextUrl.pathname === '/404' ||
-      request.nextUrl.pathname.startsWith('/_next')) {
-    return NextResponse.next();
+export async function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+
+  const authenticated = await runWithAmplifyServerContext({
+    nextServerContext: { request, response },
+    operation: async (contextSpec) => {
+      try {
+        const session = await fetchAuthSession(contextSpec);
+        return (
+          session.tokens?.accessToken !== undefined &&
+          session.tokens?.idToken !== undefined
+        );
+      } catch (error) {
+        console.log('Authentication check error:', error);
+        return false;
+      }
+    }
+  });
+
+  // Handle authentication based on route type
+  const isAuthRoute = request.nextUrl.pathname === '/login' || 
+                     request.nextUrl.pathname === '/register' || 
+                     request.nextUrl.pathname === '/forgot-password';
+
+  if (authenticated) {
+    // User is authenticated
+    if (isAuthRoute) {
+      // Redirect authenticated users away from auth pages
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
+    // Allow access to protected routes
+    return response;
+  } else {
+    // User is not authenticated
+    if (!isAuthRoute) {
+      // Redirect unauthenticated users to login page with redirect parameter
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    // Allow access to auth routes
+    return response;
   }
-
-  return NextResponse.next();
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
   matcher: [
     /*

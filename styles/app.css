@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+/* Base styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Main content wrapper */
+.content-wrapper {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hero section styles */
+.hero-section {
+  background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);
+  padding: 4rem 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Features section styles */
+.features-section {
+  background: #ffffff;
+  padding: 4rem 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Section container */
+.section-container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
+}
+
+/* Button styles */
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  color: white;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* List styles */
+ul {
+  padding-inline-start: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  list-style-type: none;
+}
+
+/* Navigation styles */
+nav ul {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  gap: 1rem;
+  background-color: transparent;
+  border: none;
+}
+
+nav li {
+  background-color: transparent;
+  padding: 0;
+}
+
+nav li:hover {
+  background: transparent;
+}
+
+/* Non-navigation list styles */
+ul:not(nav ul) {
+  display: flex;
+  flex-direction: column;
+  margin: 8px 0;
+  border: 1px solid black;
+  gap: 1px;
+  background-color: black;
+  border-radius: 8px;
+  overflow: auto;
+}
+
+li:not(nav li) {
+  background-color: white;
+  padding: 8px;
+}
+
+li:not(nav li):hover {
+  background: #dadbf9;
+}
+
+/* Link styles */
+a {
+  font-weight: 600;
+  text-decoration: none;
+  color: #0284c7;
+}
+
+/* Footer styles */
+footer {
+  flex-shrink: 0;
+  background-color: rgb(31, 41, 55);
+  padding: 2rem 0;
+  width: 100%;
+  color: #f3f4f6;
+}
+
+footer a {
+  font-weight: 400;
+  color: inherit;
+}
+
+footer ul {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  gap: 0.5rem;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+}

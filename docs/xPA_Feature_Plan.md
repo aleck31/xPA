@@ -5,55 +5,15 @@ xPA is a comprehensive personal assistant designed to help with daily management
 
 ## Core Features - Phase 1
 
-### 1. Home Finance Management
-- **Budget Management**
-  - Create and manage budgets for different categories (housing, education, travel, etc.)
-  - Set monthly/yearly budget limits
-  - Track progress against budgets
-  - Receive alerts when approaching budget limits
-
-- **Expense Tracking**
-  - Record expenses with details (amount, category, date, description, etc.)
-  - Upload receipts via image (with AI-powered text extraction)
-  - Natural language input for expense recording (e.g., "I spent $50 on groceries today")
-  - Categorize expenses automatically using AI
-  - Support for recurring expenses
-
-- **Income Tracking**
-  - Record income sources
-  - Support for recurring income
-  - Categorize income types
-
-- **Financial Analysis**
-  - Monthly/yearly spending reports
-  - Category-wise expense breakdown
-  - Income vs. expense analysis
-  - Trend analysis over time
-  - AI-powered insights and recommendations for saving opportunities
-
-### 2. Schedule Management
-- **Event Management**
-  - Create and manage events (birthdays, appointments, meetings, etc.)
-  - Set reminders for important events
-  - Recurring events support
-  - Natural language input for event creation (e.g., "Remind me about mom's birthday on May 15")
-
-- **Reminder System**
-  - Email notifications
-  - Push notifications (for future mobile app)
-  - Customizable notification timing (e.g., 1 day before, 1 hour before)
-
-- **Calendar View**
-  - Monthly/weekly/daily views
-  - Color-coding for different event types
-  - Filter events by category
-
-### 3. Core Platform Features
+### 1. Core Platform Features
 - **User Authentication & Management**
   - User registration and login
   - Profile management
-  - Multi-factor authentication
   - Role-based access control (for future family sharing features)
+
+- **Application Framework**
+  - Interface Design (styling and layout)
+  - Unified UI interaction logic
 
 - **AI Assistant Interface**
   - Natural language processing for commands and queries
@@ -65,20 +25,83 @@ xPA is a comprehensive personal assistant designed to help with daily management
   - Backup and restore options
   - Data privacy and security controls
 
-## Future Expansion - Phase 2+
+### 2. FinancialBrain (Finance Management)
+- **Income/Expense Tracking**
+  - Record income/expenses with details (amount, category, date, description, etc.)
+  - Upload receipts via image (with AI-powered text extraction)
+  - Categorize expenses automatically using AI
+  - Support for recurring expenses
+  - [GenAI]Natural language input for expense recording (e.g., "I spent $50 on groceries today")
 
-### 1. Mobile Application
-- Native Android application
-- Push notifications
-- Offline functionality
-- Camera integration for receipt scanning
+- **Budget Management**
+  - Create and manage budgets for different categories (housing, education, travel, etc.)
+  - Set monthly/yearly budget limits
+  - Track progress against budgets
+  - Receive alerts when approaching budget limits
 
-### 2. Family Sharing
-- Shared budgets and expenses
-- Permission management
-- Activity tracking
+- **Financial Dashboard - Overview**
+  - Income/Expense Summary
+  - Budget allocation limits
+  - Rankings on categories, accounts and projects
 
-### 3. Additional Modules
+- **Financial Dashboard - Report**
+  - Monthly/yearly spending reports
+  - Category-wise expense breakdown
+
+- **Financial Dashboard - Analysis**
+  - Income vs. expense analysis
+  - Trend analysis over time
+  - [GenAI]AI-powered insights and recommendations for saving opportunities
+
+### 3. Myners (AI Assistant)
+- **Real-Time Interaction**
+  - Multi-turn conversations and context understanding
+  - Support both voice and text inputs
+  - Multi-modal content recognition (e.g., scanning receipts and business cards)
+  - Emotion detection to adjust responses based on user's mood
+
+- **AI Agent Capabilities**
+  - Smart Q&A and Internet search
+  - Commands recognition and execution (e.g., "Remind me to bring sunscreen and insect repellent before hiking with kids on Saturday morning")
+  - Enhanced cross-functional collaboration through tool use (function call)
+  - Supports MCP Server extensions
+
+- **Personalization**
+  - Learns user habits and preferences
+  - Remembers important conversations and decisions to build user profiles
+  - Predicts upcoming expenses based on schedule
+
+## Future Expansion - Phase 2
+
+### 4. TimeGuardian（Schedule Management)
+- **Event Management**
+  - Create and manage events (appointments, meetings, anniversary etc.)
+  - Set reminders for important events
+  - Recurring events support
+  - [GenAI]Natural language input for event creation (e.g., "Remind me about mom's birthday on May 15")
+
+- **Task Management**
+  - Create and manage task (appointments, meetings, anniversary etc.)
+  - [GenAI]Arrange tasks to users based on event content
+
+- **Calendar View**
+  - Monthly/weekly/daily views
+  - Supports both Gregorian and Chinese Lunar calendars
+  - Color-coding or icon for different event types
+  - Filter events by category
+  - click the date to add event or task
+
+- **Reminder System**
+  - Email notifications
+  - Push notifications (for future mobile app)
+  - Customizable notification timing (e.g., 1 day before, 1 hour before)
+
+### 5. Additional Modules
+- **Cross-functional Integration**
+  - Automatically add financial events (such as bill due dates) to calendar
+  - Forecast upcoming expenses based on scheduled activities
+  - AI assistant provides money-saving opportunities and recommendations based on historical data
+
 - **Document Management**
   - Store and organize important documents
   - Document expiry reminders
@@ -89,10 +112,18 @@ xPA is a comprehensive personal assistant designed to help with daily management
   - Track progress
   - AI-powered recommendations
 
-- **Shopping List & Inventory**
-  - Create and manage shopping lists
-  - Track home inventory
-  - Automated replenishment suggestions
+### 6. Family Sharing
+- Shared budgets and expenses
+- Permission management
+- Activity tracking
+
+## Future Expansion - Phase 3
+
+### 7. Mobile Application
+- Native Android application
+- Push notifications
+- Offline functionality
+- Camera integration for receipt scanning
 
 ## Technical Requirements
 

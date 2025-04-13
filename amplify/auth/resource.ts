@@ -1,15 +1,34 @@
-import { referenceAuth } from "@aws-amplify/backend";
+import { defineAuth } from '@aws-amplify/backend';
 
 /**
- * Reference an existing auth resource
+ * Define and configure auth resource
  * @see https://docs.amplify.aws/gen2/build-a-backend/auth
  */
-export const auth = referenceAuth({
-  // Use existing Cognito User Pool  
-  userPoolId: process.env.MY_USER_POOL_ID || 'ap-southeast-1_placeholder',
-  userPoolClientId: process.env.MY_USER_POOL_CLIENT_ID || 'placeholder-client-id',
-  // Required fields for referenceAuth
-  identityPoolId: process.env.MY_IDENTITY_POOL_ID || 'ap-southeast-1:placeholder-identity-pool-id',
-  authRoleArn: process.env.MY_AUTH_ROLE_ARN || 'arn:aws:iam::placeholder:role/amplify-xPA-auth-role',
-  unauthRoleArn: process.env.MY_UNAUTH_ROLE_ARN || 'arn:aws:iam::placeholder:role/amplify-xPA-unauth-role'
+
+export const auth = defineAuth({
+  loginWith: {
+    email: true,
+  },
+  userAttributes: {
+    email: {
+      required: true
+    },
+    preferredUsername: {
+      mutable: true,
+      required: false
+    },
+    givenName: {
+      required: true,
+    },
+  },
 });
+
+//Use existing Cognito User Pool  
+// export const auth = referenceAuth({
+//   // Required fields for referenceAuth
+//   userPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID || 'ap-southeast-1_placeholder',
+//   userPoolClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID || 'placeholder-client-id',
+//   identityPoolId: process.env.NEXT_PUBLIC_IDENTITY_POOL_ID || 'ap-southeast-1:placeholder-identity-pool-id',
+//   authRoleArn: process.env.NEXT_PUBLIC_AUTH_ROLE_ARN || 'arn:aws:iam::placeholder:role/amplify-xPA-auth-role',
+//   unauthRoleArn: process.env.NEXT_PUBLIC_UNAUTH_ROLE_ARN || 'arn:aws:iam::placeholder:role/amplify-xPA-unauth-role'
+// });

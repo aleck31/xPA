@@ -32,6 +32,16 @@ const schema = a.schema({
   )
   .authorization((allow: any) => allow.authenticated()),
 
+  // Removed AI Response subscription temporarily
+  // onAIResponse: a.subscription()
+  // .arguments({
+  //   prompt: a.string(),
+  //   modelId: a.string(),
+  //   maxTokens: a.integer(),
+  //   temperature: a.float(),
+  // })
+  // .authorization((allow: any) => allow.authenticated()),
+
   // User profile information
   User: a.model({
     id: a.id(),
@@ -51,8 +61,8 @@ const schema = a.schema({
     type: a.enum(['EXPENSE', 'INCOME']),
     icon: a.string(),
     color: a.string(),
-    budgets: a.hasMany('Budget', 'category'),
-    transactions: a.hasMany('Transaction', 'category'),
+    budgets: a.hasMany('Budget', 'categoryId'),
+    transactions: a.hasMany('Transaction', 'categoryId'),
     createdAt: a.datetime().required(),
     updatedAt: a.datetime().required(),
   }).authorization((allow: any) => allow.owner()),
@@ -65,8 +75,10 @@ const schema = a.schema({
     period: a.enum(['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY', 'CUSTOM']),
     startDate: a.date().required(),
     endDate: a.date(),
-    category: a.belongsTo('Category', 'budgets'),
-    transactions: a.hasMany('Transaction', 'budget'),
+    // 保留外键
+    categoryId: a.string(),
+    category: a.belongsTo('Category', 'categoryId'),
+    transactions: a.hasMany('Transaction', 'budgetId'),
     createdAt: a.datetime().required(),
     updatedAt: a.datetime().required(),
   }).authorization((allow: any) => allow.owner()),
@@ -78,8 +90,11 @@ const schema = a.schema({
     date: a.date().required(),
     description: a.string().required(),
     type: a.enum(['EXPENSE', 'INCOME']),
-    category: a.belongsTo('Category', 'transactions'),
-    budget: a.belongsTo('Budget', 'transactions'),
+    // 添加外键
+    categoryId: a.string(),
+    budgetId: a.string(),
+    category: a.belongsTo('Category', 'categoryId'),
+    budget: a.belongsTo('Budget', 'budgetId'),
     receipt: a.string(),
     isRecurring: a.boolean().required(),
     recurringDetails: a.customType({
@@ -109,7 +124,7 @@ const schema = a.schema({
       endDate: a.date(),
       count: a.integer(),
     }),
-    reminders: a.hasMany('Reminder', 'event'),
+    reminders: a.hasMany('Reminder', 'eventId'),
     createdAt: a.datetime().required(),
     updatedAt: a.datetime().required(),
   }).authorization((allow: any) => allow.owner()),
@@ -117,7 +132,8 @@ const schema = a.schema({
   // Reminders for events
   Reminder: a.model({
     id: a.id(),
-    event: a.belongsTo('Event', 'reminders'),
+    eventId: a.string(),
+    event: a.belongsTo('Event', 'eventId'),
     reminderTime: a.datetime().required(),
     notificationType: a.enum(['EMAIL', 'PUSH', 'BOTH']),
     status: a.enum(['PENDING', 'SENT', 'FAILED']),
@@ -126,14 +142,9 @@ const schema = a.schema({
   }).authorization((allow: any) => allow.owner()),
 });
 
+export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
-  authorizationModes: {
-    defaultAuthorizationMode: "apiKey",
-    apiKeyAuthorizationMode: {
-      expiresInDays: 30,
-    },
-  },
 });
 
 /** STEP 2

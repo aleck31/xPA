@@ -5,9 +5,14 @@ import { defineStorage } from '@aws-amplify/backend';
  * @see https://docs.amplify.aws/gen2/build-a-backend/storage/
  */
 export const storage = defineStorage({
-  name: 'xpaStorage',
-  access: (allow: any) => ({
-    // Allow authenticated users to create, read, update their own content
-    authenticated: allow.user().to(['create', 'read', 'update', 'delete']),
+  name: 'xpa-storage',
+  access: (allow) => ({
+    'public/*': [
+      allow.authenticated.to(['read', 'write']),
+      allow.guest.to(['read']),
+    ],
+    'private/${identity.claims.sub}/*': [
+      allow.authenticated.to(['read', 'write']),
+    ],
   }),
 });
