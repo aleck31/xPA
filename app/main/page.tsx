@@ -1,28 +1,30 @@
 'use client';
 
-import { DashboardCard } from '@/components/dashboard/DashboardCard';
+import { DashboardCard } from '@/components/shared/DashboardCard';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
+  const router = useRouter();
+
   return (
     <>
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-gray-500">Welcome to xPA dashboard.</p>
+        <p className="mt-1 text-sm text-gray-500">Welcome to xPA.</p>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {/* Finance Summary */}
+        {/* Myners AI Assistant */}
         <DashboardCard
-          title="Monthly Budget"
-          description="$1,210.00 spent · 48% remaining"
-          type="finance"
-          value="$2,500.00"
-          action={() => window.location.href = '/dashboard/finance'}
-          actionLabel="View finance details"
+          title="Myners AI Assistant"
+          description="Your intelligent personal assistant for daily tasks and questions"
+          type="assistant"
+          value="Ask anything"
+          action={() => router.push('/assistant')}
+          actionLabel="Open Myners"
         />
 
         {/* Upcoming Events */}
@@ -31,7 +33,7 @@ export default function Dashboard() {
           description="Team Meeting - 10:00 AM · Lunch with Client - 12:30 PM · Project Deadline - 5:00 PM"
           type="schedule"
           value="3 events today"
-          action={() => window.location.href = '/dashboard/schedule'}
+          action={() => router.push('/schedule')}
           actionLabel="View schedule"
         />
 
@@ -41,7 +43,7 @@ export default function Dashboard() {
           description="Top category: Groceries ($320) · 15% decrease from last month · 2 budget alerts"
           type="analytics"
           value="Spending Analysis"
-          action={() => window.location.href = '/dashboard/finance/insights'}
+          action={() => window.location.href = '/main/finance/insights'}
           actionLabel="View insights"
         />
       </div>
@@ -49,7 +51,7 @@ export default function Dashboard() {
       {/* AI Assistant */}
       <div className="mt-8">
         <div className="overflow-hidden rounded-lg bg-white shadow-sm p-6">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">I'm Mynsers :)</h3>
+          <h3 className="text-lg font-medium leading-6 text-gray-900">I'm Myners :)</h3>
           <div className="mt-2 max-w-xl text-sm text-gray-500">
             <p>Ask me anything about your finances or schedule.</p>
           </div>
@@ -60,7 +62,7 @@ export default function Dashboard() {
                 placeholder="E.g., How much did I spend on dining last month?"
                 className="flex-1"
               />
-              <Button type="submit">
+              <Button type="submit" onClick={() => router.push('/assistant')}>
                 <Send className="h-4 w-4 mr-2" />
                 Ask
               </Button>

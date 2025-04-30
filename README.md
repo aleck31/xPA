@@ -1,17 +1,27 @@
 # xPA - eXtra Personal Assistant
 
-xPA is a comprehensive personal assistant designed to help with daily management tasks, focusing initially on finance management and schedule management. The system is cloud-based with a web interface and leverages GenAI capabilities to enhance user experience.
+xPA is a comprehensive personal assistant designed to help with daily management tasks, focusing initially on finance management and  schedule management. The system is cloud-based with a web interface and leverages GenAI capabilities to enhance user experience.
 
 ## Overview
 
 xPA aims to be an intelligent personal assistant that helps users manage their daily lives more efficiently. By leveraging AI capabilities, xPA provides a natural and intuitive interface for managing finances, schedules, and more.
 
-## Key Features
+## Current Key Features (Phase 1)
 
-- **Finance Management**: Budget creation, expense tracking, income recording, and financial analysis
-- **Schedule Management**: Event creation, reminders, and calendar views
-- **AI-Powered Assistant**: Natural language processing for commands and queries
+- **User Authentication & Management**: Registration, login, and profile management
+- **Finance Management (FinancialBrain)**: Budget creation, expense tracking, income recording, and financial analysis
+- **GenAI-Powered Assistant (Myners)**: Natural language processing for commands and queries
 - **Multi-platform Access**: Web interface with responsive design for desktop and mobile browsers
+
+## Planned Features (Phase 2 & 3)
+
+- **Data Management**: Import/export functionality, backup and restore options
+- **Schedule Management (TimeGuardian)**: Event creation, reminders, and calendar views
+- **Cross-functional Integration**: Financial events to calendar, expense forecasting
+- **Document Management**: Store and organize important documents
+- **Goal Tracking**: Set financial and personal goals with progress tracking
+- **Family Sharing**: Shared budgets and expenses with permission management
+- **Mobile Application**: Native Android app with offline functionality
 
 ## Technology Stack
 
@@ -48,8 +58,7 @@ xPA/
 │   ├── layout.tsx     # Root layout
 │   ├── login/         # Login routes
 │   │   └── reset-password/
-│   ├── dashboard/     # Dashboard routes
-│   │   └── settings/
+│   ├── main/     # Main routes
 │   ├── assistant/     # AI assistant
 │   ├── finance/
 │   ├── schedule/
@@ -167,18 +176,18 @@ npx ampx deploy --env-name prod
 ## Roadmap
 
 ### Phase 1 (Current)
-- Core platform setup with Amplify Gen2
-- Home finance management features
-- Schedule management features
-- AI assistant with Claude 3 and Nova models
-- Real-time data synchronization
+- Foundation & Core Features (Application Framework, Interface, Authentication)
+- Finance Management (FinancialBrain) - Income/Expense Tracking, Budget Management, Financial Dashboard
+- GenAI-Powered Assistant (Myners) - Real-Time Interaction, AI Agent Capabilities, Personalization
 
 ### Phase 2
-- Mobile application (Android)
-- Family sharing features
-- Advanced AI capabilities with custom models
-- Document management and OCR
-- Goal tracking and analytics
+- Schedule Management (TimeGuardian) - Event Management, Task Management, Calendar View, Reminder System
+- Cross-functional Integration - Financial events to calendar, expense forecasting
+- Additional Modules - Document Management, Goal Tracking
+
+### Phase 3
+- Family Sharing - Shared budgets, permission management
+- Mobile Application (Android) - Push notifications, offline functionality, camera integration
 
 ## License
 

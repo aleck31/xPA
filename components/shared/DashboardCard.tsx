@@ -1,12 +1,12 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart3, Calendar, DollarSign, Settings } from "lucide-react";
+import { BarChart3, Calendar, DollarSign, Settings, MessageSquare } from "lucide-react";
 
 interface DashboardCardProps {
   title: string;
   description: string;
-  type: 'finance' | 'schedule' | 'settings' | 'analytics';
+  type: 'finance' | 'schedule' | 'settings' | 'analytics' | 'assistant';
   value?: string | number;
   action?: () => void;
   actionLabel?: string;
@@ -23,14 +23,16 @@ export function DashboardCard({
   // Select icon based on card type
   const getIcon = () => {
     switch (type) {
+      case 'assistant':
+        return <MessageSquare className="h-5 w-5" />;
       case 'finance':
         return <DollarSign className="h-5 w-5" />;
+      case 'analytics':
+        return <BarChart3 className="h-5 w-5" />;
       case 'schedule':
         return <Calendar className="h-5 w-5" />;
       case 'settings':
         return <Settings className="h-5 w-5" />;
-      case 'analytics':
-        return <BarChart3 className="h-5 w-5" />;
       default:
         return null;
     }

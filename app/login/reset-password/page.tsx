@@ -3,9 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { resetPassword } from 'aws-amplify/auth';
-import { ExclamationCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid';
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { AlertCircle, CheckCircle, ArrowLeft } from "lucide-react";
 
-export default function ForgotPassword() {
+export default function ResetPassword() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +37,7 @@ export default function ForgotPassword() {
             setError('Too many attempts. Please try again later');
             break;
           default:
-            setError('An error occurred. Please try again');
+            setError(`An error occurred: ${err.message}`);
         }
       } else {
         setError('An unexpected error occurred');
@@ -44,99 +48,75 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
-          Reset your password
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Enter your email address and we&apos;ll send you a link to reset your password.
-        </p>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="rounded-md bg-red-50 p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <ExclamationCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">{error}</h3>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {success && (
-              <div className="rounded-md bg-green-50 p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <CheckCircleIcon className="h-5 w-5 text-green-400" aria-hidden="true" />
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-green-800">
-                      Password reset instructions have been sent to your email
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                  placeholder="Enter your email"
-                  disabled={isLoading}
-                />
-              </div>
+    <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-b from-blue-50 to-white">
+      <div className="w-full max-w-md">
+        <Card className="p-8 shadow-lg border-t-4 border-primary">
+          <div className="flex justify-center mb-6">
+            <h1 className="text-3xl font-bold text-primary">xPA</h1>
+          </div>
+          
+          <h2 className="text-2xl font-semibold text-center mb-2">Reset Password</h2>
+          <p className="text-center text-sm text-muted-foreground mb-6">
+            Enter your email address and we'll send you instructions to reset your password.
+          </p>
+          
+          {error && (
+            <div className="mb-4 p-3 rounded-md bg-red-50 border border-red-200 flex items-start">
+              <AlertCircle className="h-5 w-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-red-800">{error}</p>
             </div>
+          )}
 
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+          {success && (
+            <div className="mb-4 p-3 rounded-md bg-green-50 border border-green-200 flex items-start">
+              <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-green-800">
+                Password reset instructions have been sent to your email
+              </p>
+            </div>
+          )}
+
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-medium">Email address</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your.email@example.com"
+                className="focus:ring-2 focus:ring-primary/20"
                 disabled={isLoading}
-              >
-                {isLoading ? (
-                  <div className="flex items-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Sending...
-                  </div>
-                ) : (
-                  'Send reset instructions'
-                )}
-              </button>
+              />
             </div>
 
-            <div className="text-sm text-center">
-              <button
-                type="button"
-                onClick={() => router.push('/login')}
-                className="px-4 py-2 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors duration-200"
-              >
-                Back to sign in
-              </button>
-            </div>
+            <Button
+              type="submit"
+              className="w-full bg-primary hover:bg-primary/90 transition-colors"
+              disabled={isLoading}
+            >
+              {isLoading ? "Sending..." : "Send Reset Instructions"}
+            </Button>
+            
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full mt-2 flex items-center justify-center"
+              onClick={() => router.push('/login')}
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Sign In
+            </Button>
           </form>
-        </div>
+          
+          <div className="mt-8 text-center text-sm text-muted-foreground">
+            <p>© {new Date().getFullYear()} xPA - eXtra Personal Assistant</p>
+          </div>
+        </Card>
       </div>
     </div>
   );
-} 
+}
