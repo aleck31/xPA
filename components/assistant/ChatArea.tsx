@@ -128,13 +128,6 @@ export default function ChatArea({ chatId }: ChatAreaProps) {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      {/* Chat Header */}
-      <div className="flex items-center justify-between border-b px-4 py-2">
-        <div className="flex items-center gap-2">
-          <h2 className="text-lg font-medium">Chatbox</h2>
-        </div>
-      </div>
-
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4">
         {chatId ? (

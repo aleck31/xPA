@@ -1,17 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { resetPassword } from 'aws-amplify/auth';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { confirmResetPassword } from 'aws-amplify/auth';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle, CheckCircle, ArrowLeft } from "lucide-react";
 
-export default function ResetPassword() {
+export default function ConfirmResetPassword() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email') || '';
+  
+  const [code, setCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -22,19 +27,40 @@ export default function ResetPassword() {
     setSuccess(false);
     setIsLoading(true);
 
+    // Validate passwords match
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      await resetPassword({ username: email });
+      await confirmResetPassword({
+        username: email,
+        confirmationCode: code,
+        newPassword: newPassword
+      });
+      
       setSuccess(true);
-      // Redirecting to the verification code confirmation page
-      router.push(`/login/reset-password/confirm?email=${encodeURIComponent(email)}`);
+      
+      // Redirect to login page after successful password reset
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000);
     } catch (err) {
       if (err instanceof Error) {
         switch (err.name) {
-          case 'UserNotFoundException':
-            setError('No account found with this email address');
+          case 'CodeMismatchException':
+            setError('Invalid verification code');
+            break;
+          case 'ExpiredCodeException':
+            setError('Verification code has expired');
             break;
           case 'LimitExceededException':
             setError('Too many attempts. Please try again later');
+            break;
+          case 'InvalidPasswordException':
+            setError('Password does not meet requirements');
             break;
           default:
             setError(`An error occurred: ${err.message}`);
@@ -55,9 +81,9 @@ export default function ResetPassword() {
             <h1 className="text-3xl font-bold text-primary">xPA</h1>
           </div>
           
-          <h2 className="text-2xl font-semibold text-center mb-2">Reset Password</h2>
+          <h2 className="text-2xl font-semibold text-center mb-2">Reset Your Password</h2>
           <p className="text-center text-sm text-muted-foreground mb-6">
-            Enter your email address and we'll send you instructions to reset your password.
+            Enter the verification code sent to {email} and your new password.
           </p>
           
           {error && (
@@ -71,34 +97,63 @@ export default function ResetPassword() {
             <div className="mb-4 p-3 rounded-md bg-green-50 border border-green-200 flex items-start">
               <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
               <p className="text-sm text-green-800">
-                Password reset instructions have been sent to your email
+                Password reset successful! Redirecting to login...
               </p>
             </div>
           )}
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">Email address</Label>
+              <Label htmlFor="code" className="text-sm font-medium">Verification Code</Label>
               <Input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
+                id="code"
+                name="code"
+                type="text"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.email@example.com"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="Enter verification code"
                 className="focus:ring-2 focus:ring-primary/20"
-                disabled={isLoading}
+                disabled={isLoading || success}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="newPassword" className="text-sm font-medium">New Password</Label>
+              <Input
+                id="newPassword"
+                name="newPassword"
+                type="password"
+                required
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Enter new password"
+                className="focus:ring-2 focus:ring-primary/20"
+                disabled={isLoading || success}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password</Label>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm new password"
+                className="focus:ring-2 focus:ring-primary/20"
+                disabled={isLoading || success}
               />
             </div>
 
             <Button
               type="submit"
               className="w-full bg-primary hover:bg-primary/90 transition-colors"
-              disabled={isLoading}
+              disabled={isLoading || success}
             >
-              {isLoading ? "Sending..." : "Send Reset Instructions"}
+              {isLoading ? "Processing..." : "Reset Password"}
             </Button>
             
             <Button
@@ -106,6 +161,7 @@ export default function ResetPassword() {
               variant="outline"
               className="w-full mt-2 flex items-center justify-center"
               onClick={() => router.push('/login')}
+              disabled={isLoading || success}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Sign In

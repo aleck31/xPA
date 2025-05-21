@@ -20,9 +20,10 @@
 /build
 
 # misc
+.vscode
 .DS_Store
 *.pem
-/devguide
+devguide
 
 # debug
 npm-debug.log*

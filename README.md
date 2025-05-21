@@ -110,16 +110,7 @@ cd xPA
 npm install
 ```
 
-3. Initialize shadcn/ui components (if not already initialized):
-```bash
-# Initialize shadcn/ui
-npx shadcn@latest init
-
-# Add required components
-npx shadcn@latest add button card dialog form input select tabs
-```
-
-4. Configure environment variables:
+3. Configure environment variables:
 Create a `.env.local` file in the project root:
 ```
 # Authentication Configuration
@@ -139,23 +130,21 @@ XPA_BEDROCK_MODEL_ID=your-model-id
 XPA_S3_BUCKET=your-s3-bucket
 ```
 
-4. Start the development server:
-```bash
-npm run dev
-```
-
 ### Deployment
 
 #### Development (Sandbox)
 
-1. Start the Amplify sandbox:
+1. Start the Amplify sandbox (Back-end):
 ```bash
 npx ampx sandbox  --identifier my-sandbox
+
+# Deploy to sandbox environment
+npx dotenvx run --env-file=.env.local -- ampx sandbox
 ```
 
-2. Deploy to sandbox environment:
+2. Start the development server (Front-end):
 ```bash
-npx dotenvx run --env-file=.env.local -- ampx sandbox
+npm run dev
 ```
 
 #### Production

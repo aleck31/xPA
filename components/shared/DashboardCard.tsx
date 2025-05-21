@@ -39,7 +39,7 @@ export function DashboardCard({
   };
 
   return (
-    <Card className="w-full shadow-xs">
+    <Card className="w-full shadow-xs overflow-hidden">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="flex items-center space-x-2">
           {getIcon()}
@@ -50,7 +50,7 @@ export function DashboardCard({
         {value && (
           <div className="text-2xl font-bold mb-2">{value}</div>
         )}
-        <CardDescription>{description}</CardDescription>
+        <CardDescription className="line-clamp-3 break-words">{description}</CardDescription>
       </CardContent>
       {action && (
         <CardFooter>
