@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   SidebarProvider,
@@ -17,38 +17,47 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import { signOut } from '@/lib/auth';
-import { LogOut, User, Settings } from "lucide-react";
+import { UserMenu } from "@/components/shared/UserMenu";
 
 interface AppLayoutProps {
   sidebar: React.ReactElement<React.ComponentProps<typeof Sidebar>>;
   children: React.ReactNode;
   subSidebar?: React.ReactNode;
+  defaultCollapsed?: boolean;
 }
 
 export function AppLayout({
   sidebar,
-  children, 
-  subSidebar 
+  children,
+  subSidebar,
+  defaultCollapsed = false
 }: AppLayoutProps) {
   const pathname = usePathname();
-  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
-  const router = useRouter();
+  const [initialOpen, setInitialOpen] = useState<boolean | undefined>(undefined);
+  
+  // Check for existing sidebar state cookie on client-side
+  useEffect(() => {
+    // Only apply defaultCollapsed if there's no existing cookie
+    const cookies = document.cookie.split(';');
+    const sidebarCookie = cookies.find(cookie => cookie.trim().startsWith('sidebar_state='));
+    
+    if (sidebarCookie) {
+      // Cookie exists, use its value
+      const sidebarState = sidebarCookie.split('=')[1].trim();
+      setInitialOpen(sidebarState === 'true');
+    } else {
+      // No cookie, use the defaultCollapsed prop
+      setInitialOpen(!defaultCollapsed);
+    }
+  }, [defaultCollapsed]);
 
   // Determine current module based on pathname
   const getCurrentModule = () => {
     if (pathname.startsWith('/assistant')) return 'Myners';
-    if (pathname.startsWith('/finance')) return 'FinancialBrain';
+    if (pathname.startsWith('/knowledge')) return 'MindKeeper';
     if (pathname.startsWith('/schedule')) return 'TimeGuardian';
-    return 'Overview';
+    if (pathname.startsWith('/finance')) return 'FinancialBrain';
+    return 'Home';
   };
 
    const getCurrentSubMenu = () => {
@@ -56,21 +65,13 @@ export function AppLayout({
     return 'SubMenu'
   };
 
-  const handleLogout = async () => {
-    // console.log('Logout button clicked');
-    setIsLoggingOut(true);
-    try {
-      await signOut();
-      // console.log('Sign out successful, redirecting to login page');
-      router.push('/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
-      setIsLoggingOut(false);
-    }
-  };
+  // Only render when initialOpen is determined
+  if (initialOpen === undefined) {
+    return null; // Or a loading state if preferred
+  }
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={initialOpen}>
       {/* Sidebar */}
       {sidebar}
       <SidebarInset className="flex flex-col flex-1 overflow-x-hidden">
@@ -90,58 +91,23 @@ export function AppLayout({
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          {/* User menu with logout */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="rounded-full h-8 w-8 border shrink-0"
-                aria-label="User menu"
-              >
-                <User className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem 
-                className="cursor-pointer"
-                onClick={() => router.push('/profile')}
-              >
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                className="cursor-pointer"
-                onClick={() => router.push('/preferences')}
-              >
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Preferences</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                className="cursor-pointer text-red-500 focus:text-red-500"
-                onClick={handleLogout}
-                disabled={isLoggingOut}
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+
+          {/* User menu with Settings */}
+          <UserMenu />
         </header>
 
-        <div className="flex flex-1 overflow-hidden">
+        <main className="flex flex-1 overflow-hidden">
           {/* Main content */}
-          <main className="flex-1 overflow-hidden w-full">
+          <section className="flex-1 overflow-hidden w-full">
             {children}
-          </main>
+          </section>
           {/* Right sidebar (optional) */}
           {subSidebar && (
             <aside className="w-64 min-w-[16rem] max-w-[16rem] border-l bg-background hidden lg:block shrink-0">
               {subSidebar}
             </aside>
           )}
-        </div>
+        </main>
       </SidebarInset>
 
     </SidebarProvider>

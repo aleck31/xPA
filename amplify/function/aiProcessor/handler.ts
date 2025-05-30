@@ -6,7 +6,7 @@ export async function handler(event: any) {
     endpoint: process.env.BEDROCK_ENDPOINT,
   });
   
-  const modelId = event.modelId || 'anthropic.claude-3-sonnet-20240229-v1:0';
+  const modelId = event.modelId || process.env.BEDROCK_MODEL_ID;
   const modelParams = getModelParameters(modelId, event);
   
   const command = new InvokeModelCommand({

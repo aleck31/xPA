@@ -10,10 +10,16 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   useEffect(() => {
-    // Configure Amplify with the outputs from the sandbox environment
-    Amplify.configure(amplifyOutputs, {
-      ssr: true
-    });
+    // Configure Amplify globally with the outputs
+    try {
+      console.log('Configuring Amplify globally');
+      Amplify.configure(amplifyOutputs, {
+        ssr: true
+      });
+      console.log('Amplify configured successfully');
+    } catch (error) {
+      console.error('Error configuring Amplify:', error);
+    }
   }, []);
 
   return <>{children}</>;

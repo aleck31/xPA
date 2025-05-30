@@ -40,10 +40,10 @@ export default function ModuleSelector({ currentModule }: ModuleSelectorProps) {
 
   const modules: Module[] = [
     {
-      name: "Main",
+      name: "Home",
       nameZh: "应用主页",
       icon: <LayoutDashboard className="h-5 w-5" />,
-      path: "/main",
+      path: "/",
     },
     {
       name: "Myners",
@@ -52,10 +52,10 @@ export default function ModuleSelector({ currentModule }: ModuleSelectorProps) {
       path: "/assistant",
     },
     {
-      name: "FinancialBrain",
-      nameZh: "财务管理",
+      name: "MindKeeper",
+      nameZh: "知识管理",
       icon: <Wallet className="h-5 w-5" />,
-      path: "/finance",
+      path: "/knowledge",
     },
     {
       name: "TimeGuardian",
@@ -63,6 +63,12 @@ export default function ModuleSelector({ currentModule }: ModuleSelectorProps) {
       icon: <Calendar className="h-5 w-5" />,
       path: "/schedule",
     },
+    {
+      name: "FinancialBrain",
+      nameZh: "财务管理",
+      icon: <Wallet className="h-5 w-5" />,
+      path: "/finance",
+    }
   ];
 
   const currentModuleData = modules.find((m) => m.name === currentModule) || modules[0];

@@ -6,7 +6,7 @@ import { BarChart3, Calendar, DollarSign, Settings, MessageSquare } from "lucide
 interface DashboardCardProps {
   title: string;
   description: string;
-  type: 'finance' | 'schedule' | 'settings' | 'analytics' | 'assistant';
+  type: 'assistant' | 'knowledge' | 'finance' | 'schedule' | 'analytics' | 'settings';
   value?: string | number;
   action?: () => void;
   actionLabel?: string;
