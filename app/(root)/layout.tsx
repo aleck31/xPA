@@ -13,11 +13,11 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-interface MainLayoutProps {
+interface RootLayoutProps {
   children: ReactNode;
 }
 
-export default function MainLayout({ children }: MainLayoutProps) {
+export default function RootDashboardLayout({ children }: RootLayoutProps) {
   const pathname = usePathname();
   
   // Define menu items for main module
@@ -25,15 +25,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
     {
       title: "Default Pageview",
       items: [
-        { name: "Overview", path: "/main", icon: Home, isActive: pathname === "/main" }
+        { name: "Overview", path: "/", icon: Home, isActive: pathname === "/" }
       ]
     },
     {
       title: "Dashboard",
       items: [
-        { name: "Analytics", path: "/main/analytics", icon: BarChart3, isActive: pathname === "/main/analytics" },
-        { name: "Notifications", path: "/main/notifications", icon: Bell, isActive: pathname === "/main/notifications" },
-        { name: "Reports", path: "/main/reports", icon: FileText, isActive: pathname === "/main/reports" },
+        { name: "Analytics", path: "/analytics", icon: BarChart3, isActive: pathname === "/analytics" },
+        { name: "Notifications", path: "/notifications", icon: Bell, isActive: pathname === "/notifications" },
+        { name: "Reports", path: "/reports", icon: FileText, isActive: pathname === "/reports" },
       ]
     },
     {
@@ -47,9 +47,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <AppLayout
+      defaultCollapsed={true}
       sidebar={
         <AppSidebar 
-          moduleName="Dashboard"
+          moduleName="Home"
           menuItems={menuItems}
         />
       }

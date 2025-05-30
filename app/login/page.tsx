@@ -1,25 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { signIn, signUp } from 'aws-amplify/auth';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { AlertCircle, CheckCircle, Eye, EyeOff } from "lucide-react";
+import { CheckCircle } from "lucide-react";
+import { SignInForm } from '@/components/login/SignInForm';
+import { SignUpForm } from '@/components/login/SignUpForm';
 
 export default function Login() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
+  const [error, setError] = useState('');
   
+  // Check for redirect path
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const redirectPath = urlParams.get('redirect');
@@ -27,84 +20,15 @@ export default function Login() {
       sessionStorage.setItem('redirectPath', redirectPath);
     }
   }, []);
-
-  const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  
+  const handleSuccess = (message: string) => {
+    setSuccess(message);
     setError('');
-    setSuccess('');
-    
-    try {
-      await signIn({ username: email, password });
-      setSuccess('Login successful! Redirecting...');
-      setTimeout(() => {
-        router.push('/main');
-      }, 1000);
-    } catch (err) {
-      if (err instanceof Error) {
-        switch (err.name) {
-          case 'UserNotFoundException':
-            setError('No account found with this email address');
-            break;
-          case 'NotAuthorizedException':
-            setError('Incorrect email or password');
-            break;
-          case 'UserNotConfirmedException':
-            setError('Please verify your email before signing in');
-            break;
-          default:
-            setError(`Login failed: ${err.message}`);
-        }
-      } else {
-        setError('An unexpected error occurred');
-      }
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
   };
-
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+  
+  const handleError = (message: string) => {
+    setError(message);
     setSuccess('');
-    
-    try {
-      await signUp({
-        username: email,
-        password,
-        options: {
-          userAttributes: { email },
-          autoSignIn: true
-        }
-      });
-      setSuccess('Account created successfully! Redirecting...');
-      setTimeout(() => {
-        router.push('/main');
-      }, 1000);
-    } catch (err) {
-      if (err instanceof Error) {
-        switch (err.name) {
-          case 'UsernameExistsException':
-            setError('An account with this email already exists');
-            break;
-          case 'InvalidPasswordException':
-            setError('Password does not meet requirements');
-            break;
-          case 'InvalidParameterException':
-            setError('Invalid email format');
-            break;
-          default:
-            setError(`Sign up failed: ${err.message}`);
-        }
-      } else {
-        setError('An unexpected error occurred');
-      }
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -134,120 +58,28 @@ export default function Login() {
                   <p className="text-sm text-green-800">{success}</p>
                 </div>
               )}
-            
-            <TabsContent value="signin">
-              <form onSubmit={handleSignIn} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium">Email</Label>
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your.email@example.com"
-                    className="focus:ring-2 focus:ring-primary/20"
-                    required 
+              
+              {/* Use a min-height to ensure consistent tab heights */}
+              <div className="min-h-[320px]">
+                <TabsContent value="signin">
+                  <SignInForm 
+                    email={email}
+                    setEmail={setEmail}
+                    onSuccess={handleSuccess}
+                    onError={handleError}
                   />
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-                    <Link 
-                      href="./reset-password" 
-                      className="text-xs text-primary hover:text-primary/80 hover:underline"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <div className="relative">
-                    <Input 
-                      id="password" 
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="focus:ring-2 focus:ring-primary/20 pr-10"
-                      required 
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
-                  </div>
-                </div>
-                <Button 
-                  type="submit" 
-                  className="w-full bg-primary hover:bg-primary/90 transition-colors" 
-                  disabled={loading}
-                >
-                  {loading ? "Signing in..." : "Sign In"}
-                </Button>
+                </TabsContent>
                 
-                {error && (
-                  <div className="mt-3 p-3 rounded-md bg-red-50 border border-red-200 flex items-start">
-                    <AlertCircle className="h-5 w-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-red-800">{error}</p>
-                  </div>
-                )}
-              </form>
-            </TabsContent>
-            
-            <TabsContent value="signup">
-              <form onSubmit={handleSignUp} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email" className="text-sm font-medium">Email</Label>
-                  <Input 
-                    id="signup-email" 
-                    type="email" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your.email@example.com"
-                    className="focus:ring-2 focus:ring-primary/20"
-                    required 
+                <TabsContent value="signup">
+                  <SignUpForm 
+                    email={email}
+                    setEmail={setEmail}
+                    onSuccess={handleSuccess}
+                    onError={handleError}
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password" className="text-sm font-medium">Password</Label>
-                  <div className="relative">
-                    <Input 
-                      id="signup-password" 
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="focus:ring-2 focus:ring-primary/20 pr-10"
-                      placeholder="Minimum 8 characters"
-                      required 
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters.
-                  </p>
-                </div>
-                <Button 
-                  type="submit" 
-                  className="w-full bg-primary hover:bg-primary/90 transition-colors" 
-                  disabled={loading}
-                >
-                  {loading ? "Creating Account..." : "Create Account"}
-                </Button>
-                
-                {error && (
-                  <div className="mt-3 p-3 rounded-md bg-red-50 border border-red-200 flex items-start">
-                    <AlertCircle className="h-5 w-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-red-800">{error}</p>
-                  </div>
-                )}
-              </form>
-            </TabsContent>
+                </TabsContent>
+              </div>
+              
               <div className="mt-8 text-center text-sm text-muted-foreground">
                 <p>© {new Date().getFullYear()} xPA - eXtra Personal Assistant</p>
               </div>
@@ -256,13 +88,15 @@ export default function Login() {
         </Card>
         <div className="hidden md:flex md:w-1/2 bg-gray-100 items-center justify-center p-8">
           <div className="text-center">
-            <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-white flex items-center justify-center shadow-md">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-gray-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
-              </svg>
+            <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+              <div className="text-white font-bold text-3xl">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                </svg>
+              </div>
             </div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">xPA Assistant</h2>
-            <p className="text-gray-600">Your intelligent personal assistant for managing finances, schedules, and more.</p>
+            <p className="text-gray-600">Your intelligent personal assistant designed to simplify and organize your daily life.</p>
           </div>
         </div>
       </div>

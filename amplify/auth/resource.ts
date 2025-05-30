@@ -29,6 +29,6 @@ export const auth = defineAuth({
 //   userPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID || 'ap-southeast-1_placeholder',
 //   userPoolClientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID || 'placeholder-client-id',
 //   identityPoolId: process.env.NEXT_PUBLIC_IDENTITY_POOL_ID || 'ap-southeast-1:placeholder-identity-pool-id',
-//   authRoleArn: process.env.NEXT_PUBLIC_AUTH_ROLE_ARN || 'arn:aws:iam::placeholder:role/amplify-xPA-auth-role',
-//   unauthRoleArn: process.env.NEXT_PUBLIC_UNAUTH_ROLE_ARN || 'arn:aws:iam::placeholder:role/amplify-xPA-unauth-role'
+//   authRoleArn: process.env.AMPLIFY_AUTH_ROLE_ARN || 'arn:aws:iam::placeholder:role/amplify-xPA-auth-role',
+//   unauthRoleArn: process.env.AMPLIFY_UNAUTH_ROLE_ARN || 'arn:aws:iam::placeholder:role/amplify-xPA-unauth-role'
 // });

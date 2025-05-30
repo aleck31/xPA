@@ -12,7 +12,8 @@ interface UserProfile {
   email: string;
   given_name: string;
   family_name?: string;
-  preferred_username?: string;
+  display_name?: string;
+  user_id?: string;
   picture?: string;
 }
 
@@ -26,7 +27,8 @@ export default function ProfilePage() {
     email: '',
     given_name: '',
     family_name: '',
-    preferred_username: '',
+    display_name: '',
+    user_id: '',
     picture: '',
   });
 
@@ -40,7 +42,7 @@ export default function ProfilePage() {
           email: userAttributes.email || '',
           given_name: userAttributes.given_name || '',
           family_name: userAttributes.family_name || '',
-          preferred_username: userAttributes.preferred_username || userInfo?.username || '',
+          user_id: userAttributes.user_id || userInfo?.username || '',
           picture: userAttributes.picture || '',
         });
         
@@ -48,7 +50,7 @@ export default function ProfilePage() {
           email: userAttributes.email || '',
           given_name: userAttributes.given_name || '',
           family_name: userAttributes.family_name || '',
-          preferred_username: userAttributes.preferred_username || userInfo?.username || '',
+          user_id: userAttributes.user_id || userInfo?.username || '',
           picture: userAttributes.picture || '',
         });
       } catch (error) {
@@ -87,8 +89,8 @@ export default function ProfilePage() {
         attributesToUpdate.family_name = formData.family_name;
       }
       
-      if (formData.preferred_username && formData.preferred_username !== profile?.preferred_username) {
-        attributesToUpdate.preferred_username = formData.preferred_username;
+      if (formData.user_id && formData.user_id !== profile?.user_id) {
+        attributesToUpdate.user_id = formData.user_id;
       }
       
       if (formData.picture && formData.picture !== profile?.picture) {
@@ -173,17 +175,17 @@ export default function ProfilePage() {
                   onChange={handleInputChange}
                 />
               </div>
-              
+
               <div className="grid gap-3">
-                <Label htmlFor="preferred_username">Preferred Username</Label>
+                <Label htmlFor="display_name">Display Name</Label>
                 <Input
-                  id="preferred_username"
-                  name="preferred_username"
-                  value={formData.preferred_username || ''}
+                  id="display_name"
+                  name="display_name"
+                  value={formData.display_name || ''}
                   onChange={handleInputChange}
                 />
               </div>
-              
+
               <div className="grid gap-3">
                 <Label htmlFor="picture">Profile Picture URL</Label>
                 <Input
@@ -195,7 +197,12 @@ export default function ProfilePage() {
                 />
               </div>
             </div>
-            
+
+            <div className="text-left text-sm">
+              <span>User ID: </span>
+              <span id="user_id">{formData.user_id || ''} </span>
+            </div>
+
             {updateError && (
               <div className="mt-4 p-3 bg-red-50 text-red-700 rounded-md">
                 {updateError}
@@ -209,6 +216,7 @@ export default function ProfilePage() {
             )}
             
             <div className="mt-6 flex justify-end">
+              <Button type='reset' >Cancel</Button>
               <Button type="submit" disabled={updating}>
                 {updating ? 'Updating...' : 'Save Changes'}
               </Button>

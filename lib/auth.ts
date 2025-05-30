@@ -2,14 +2,14 @@ import { getCurrentUser, signOut as amplifySignOut } from 'aws-amplify/auth';
 
 // 初始化 Amplify Auth 配置
 export const configureAuth = () => {
-  // 注意：这里我们只使用客户端可访问的环境变量
-  // 服务器端的环境变量会在 API 路由中使用
+  // Note: We only use client-accessible environment variables here
+  // Server-side environment variables will be used in API routes
   return {
-    region: process.env.NEXT_PUBLIC_AWS_REGION,
+    region: process.env.AWS_REGION,
   };
 };
 
-// 获取当前用户信息
+// Get current user info
 export const getCurrentUserInfo = async () => {
   try {
     const { username, userId, signInDetails } = await getCurrentUser();
@@ -24,13 +24,21 @@ export const getCurrentUserInfo = async () => {
   }
 };
 
-// 登出
+// Cache key for storing user info in sessionStorage (must match the one in useUser hook)
+const USER_CACHE_KEY = 'xpa_user_info';
+
+// Logout
 export const signOut = async () => {
   try {
+    // Clear the cached user info from sessionStorage
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem(USER_CACHE_KEY);
+    }
+
     await amplifySignOut();
     return true;
   } catch (error) {
     console.error('Error signing out:', error);
     return false;
   }
-}; 
+};

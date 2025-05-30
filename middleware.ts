@@ -23,14 +23,16 @@ export async function middleware(request: NextRequest) {
 
   // Handle authentication based on route type
   const isAuthRoute = request.nextUrl.pathname === '/login' || 
-                     request.nextUrl.pathname === '/register' || 
-                     request.nextUrl.pathname === '/forgot-password';
+                     request.nextUrl.pathname === '/signup' ||
+                     request.nextUrl.pathname === '/verify-email' || 
+                     request.nextUrl.pathname === '/reset-password' ||
+                     request.nextUrl.pathname.startsWith('/login/reset-password');
 
   if (authenticated) {
     // User is authenticated
     if (isAuthRoute) {
       // Redirect authenticated users away from auth pages
-      return NextResponse.redirect(new URL('/main', request.url));
+      return NextResponse.redirect(new URL('/', request.url));
     }
     // Allow access to protected routes
     return response;
