@@ -1,53 +1,51 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { confirmSignUp, resendSignUpCode, signIn } from 'aws-amplify/auth';
+import { confirmResetPassword } from 'aws-amplify/auth';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle, CheckCircle, ArrowLeft } from "lucide-react";
 
-export default function VerifyEmail() {
+export default function ConfirmResetPassword() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || '';
   
   const [code, setCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [resendDisabled, setResendDisabled] = useState(false);
-  const [countdown, setCountdown] = useState(0);
 
-  useEffect(() => {
-    if (countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      return () => clearTimeout(timer);
-    } else if (countdown === 0 && resendDisabled) {
-      setResendDisabled(false);
-    }
-  }, [countdown, resendDisabled]);
-
-  const handleVerify = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess(false);
     setIsLoading(true);
 
+    // Validate passwords match
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      await confirmSignUp({
+      await confirmResetPassword({
         username: email,
-        confirmationCode: code
+        confirmationCode: code,
+        newPassword: newPassword
       });
       
       setSuccess(true);
       
-      // Redirect to home page after successful verification
-      // With autoSignIn enabled in the signup process, the user will be automatically signed in
+      // Redirect to login page after successful password reset
       setTimeout(() => {
-        router.push('/');
+        router.push('/auth');
       }, 2000);
     } catch (err) {
       if (err instanceof Error) {
@@ -61,32 +59,8 @@ export default function VerifyEmail() {
           case 'LimitExceededException':
             setError('Too many attempts. Please try again later');
             break;
-          default:
-            setError(`An error occurred: ${err.message}`);
-        }
-      } else {
-        setError('An unexpected error occurred');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleResendCode = async () => {
-    setError('');
-    setIsLoading(true);
-    setResendDisabled(true);
-    setCountdown(60); // Disable resend for 60 seconds
-
-    try {
-      await resendSignUpCode({ username: email });
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err) {
-      if (err instanceof Error) {
-        switch (err.name) {
-          case 'LimitExceededException':
-            setError('Too many attempts. Please try again later');
+          case 'InvalidPasswordException':
+            setError('Password does not meet requirements');
             break;
           default:
             setError(`An error occurred: ${err.message}`);
@@ -94,8 +68,6 @@ export default function VerifyEmail() {
       } else {
         setError('An unexpected error occurred');
       }
-      setResendDisabled(false);
-      setCountdown(0);
     } finally {
       setIsLoading(false);
     }
@@ -106,16 +78,12 @@ export default function VerifyEmail() {
       <div className="w-full max-w-md">
         <Card className="p-8 shadow-lg border-t-4 border-primary">
           <div className="flex justify-center mb-6">
-            <img src="/images/xpa-logo.svg" alt="xPA Logo" className="h-16 w-16" />
+            <h1 className="text-3xl font-bold text-primary">xPA</h1>
           </div>
           
-          <h2 className="text-2xl font-semibold text-center mb-2">Verify Your Email</h2>
+          <h2 className="text-2xl font-semibold text-center mb-2">Reset Your Password</h2>
           <p className="text-center text-sm text-muted-foreground mb-6">
-            {email ? (
-              <>We sent a verification code to <span className="font-medium">{email}</span>.</>
-            ) : (
-              <>Please enter the verification code sent to your email.</>
-            )}
+            Enter the verification code sent to {email} and your new password.
           </p>
           
           {error && (
@@ -129,12 +97,12 @@ export default function VerifyEmail() {
             <div className="mb-4 p-3 rounded-md bg-green-50 border border-green-200 flex items-start">
               <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
               <p className="text-sm text-green-800">
-                {success ? 'Email verified successfully! Signing you in and redirecting to the app...' : 'Verification code sent successfully!'}
+                Password reset successful! Redirecting to login...
               </p>
             </div>
           )}
 
-          <form className="space-y-4" onSubmit={handleVerify}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="code" className="text-sm font-medium">Verification Code</Label>
               <Input
@@ -150,36 +118,54 @@ export default function VerifyEmail() {
               />
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="newPassword" className="text-sm font-medium">New Password</Label>
+              <Input
+                id="newPassword"
+                name="newPassword"
+                type="password"
+                required
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Enter new password"
+                className="focus:ring-2 focus:ring-primary/20"
+                disabled={isLoading || success}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password</Label>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm new password"
+                className="focus:ring-2 focus:ring-primary/20"
+                disabled={isLoading || success}
+              />
+            </div>
+
             <Button
               type="submit"
               className="w-full bg-primary hover:bg-primary/90 transition-colors"
               disabled={isLoading || success}
             >
-              {isLoading ? "Verifying..." : "Verify Email"}
+              {isLoading ? "Processing..." : "Reset Password"}
             </Button>
             
-            <div className="flex justify-between items-center mt-4">
-              <Button
-                type="button"
-                variant="outline"
-                className="flex items-center justify-center"
-                onClick={() => router.push('/login')}
-                disabled={isLoading || success}
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Sign In
-              </Button>
-              
-              <Button
-                type="button"
-                variant="ghost"
-                className="text-sm text-primary hover:text-primary/80"
-                onClick={handleResendCode}
-                disabled={isLoading || resendDisabled || success}
-              >
-                {resendDisabled ? `Resend code (${countdown}s)` : "Resend code"}
-              </Button>
-            </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full mt-2 flex items-center justify-center"
+              onClick={() => router.push('/auth')}
+              disabled={isLoading || success}
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Sign In
+            </Button>
           </form>
           
           <div className="mt-8 text-center text-sm text-muted-foreground">

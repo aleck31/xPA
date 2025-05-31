@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle } from "lucide-react";
-import { SignInForm } from '@/components/login/SignInForm';
-import { SignUpForm } from '@/components/login/SignUpForm';
+import { SignInForm } from '@/components/auth/SignInForm';
+import { SignUpForm } from '@/components/auth/SignUpForm';
 
 export default function Login() {
   const [email, setEmail] = useState('');

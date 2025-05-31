@@ -19,6 +19,9 @@ import {
   SidebarMenuItem,
   SidebarMenuAction,
   SidebarMenuButton,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
   SidebarRail,
   useSidebar
 } from "@/components/ui/sidebar";
@@ -41,30 +44,31 @@ import {
 } from "lucide-react";
 
 // Define types for menu items
-export interface MenuItem {
-  name: string;
-  path: string;
-  icon: LucideIcon;
-  isActive?: boolean;
-  desc?: string;
-}
-
-export interface MenuGroup {
-  title: string;
-  items: MenuItem[];
-}
-
 export interface QuickAction {
-  label: string;
+  title: string;
   icon: LucideIcon;
   onClick?: () => void;
 }
 
-export interface DynamicSection {
+export interface MenuItem {
   title: string;
+  path?: string;
+  icon: LucideIcon;
+  isActive?: boolean;
+  desc?: string;
+  subItems?: MenuItem[];
+}
+
+export interface MenuGroup {
+  label: string;
+  items: MenuItem[];
+}
+
+export interface DynamicSection {
+  label: string;
   items: Array<{
     id: string;
-    name: string;
+    title: string;
     path: string;
     icon: LucideIcon;
     isActive?: boolean;
@@ -80,9 +84,9 @@ export interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export default function AppSidebar({ 
   moduleName, 
-  menuItems, 
   quickAction,
   dynamicSection,
+  menuItems,
   ...props 
 }: AppSidebarProps) {
   const pathname = usePathname();
@@ -106,22 +110,21 @@ export default function AppSidebar({
       <SidebarContent>
         {/* Quick Access Function */}
         {quickAction && (
-          <div className="p-4 group-data-[collapsible=icon]:hidden">
-            <Button
-              variant="secondary"
+          <SidebarMenu className="p-4 group-data-[collapsible=icon]">
+            <SidebarMenuButton
               className="w-full justify-start gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={quickAction.onClick}
             >
               <quickAction.icon className="h-4 w-4" />
-              {quickAction.label}
-            </Button>
-          </div>
+              {quickAction.title}
+            </SidebarMenuButton>
+          </SidebarMenu>
         )}
 
-        {/* Dynamic Nav Section (e.g., Projects, Chat Nav) */}
+        {/* Dynamic Nav Section (e.g., Projects, Chat Sessions) */}
         {dynamicSection && (
           <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <SidebarGroupLabel>{dynamicSection.title}</SidebarGroupLabel>
+            <SidebarGroupLabel>{dynamicSection.label}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {dynamicSection.items.map((item) => (
@@ -129,11 +132,11 @@ export default function AppSidebar({
                     <SidebarMenuButton
                       asChild
                       isActive={item.isActive !== undefined ? item.isActive : pathname === item.path}
-                      tooltip={item.name}
+                      tooltip={item.title}
                     >
                       <Link href={item.path} className="flex items-center gap-3">
                         <item.icon className="h-4 w-4" />
-                        <span className="truncate">{item.name}</span>
+                        <span className="truncate">{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
                       <DropdownMenu>
@@ -166,46 +169,68 @@ export default function AppSidebar({
           </SidebarGroup>
         )}
 
-      {/* Main Navigation */}
-      {processedMenuItems.map((group) => (
-        <SidebarGroup key={group.title} >
-          <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {group.items.map((item) => (
-                <Collapsible
-                  key={item.name}
-                  asChild
-                  defaultOpen={item.isActive}
-                  className="group/collapsible"
-                >
-                  <SidebarMenuItem key={item.path}>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton tooltip={item.name}>
-                        {item.icon && <item.icon />}
-                        <span>{item.name}</span>
-                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
+        {/* Main Navigation */}
+        {processedMenuItems.map((group) => (
+          <SidebarGroup key={group.label} >
+            <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {group.items.map((item) => (
+                  item.subItems ? (
+                    // Menu item with submenu
+                    <Collapsible
+                      key={item.title}
+                      asChild
+                      defaultOpen={item.isActive}
+                      className="group/collapsible"
+                    >
+                      <SidebarMenuItem key={item.path}>
+                        <CollapsibleTrigger asChild>
+                          <SidebarMenuButton tooltip={item.title}>
+                            <item.icon className="h-4 w-4" />
+                            <span>{item.title}</span>
+                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                          </SidebarMenuButton>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <SidebarMenuSub>
+                            {item.subItems.map((subItem) => (
+                              <SidebarMenuSubItem key={subItem.path}>
+                                <SidebarMenuSubButton
+                                  asChild
+                                  isActive={subItem.isActive}
+                                >
+                                  <Link href={subItem.path || "#"} className="flex items-center gap-3">
+                                    <subItem.icon className="h-4 w-4" />
+                                    <span>{subItem.title}</span>
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  ) : (
+                    // Menu item without submenu
+                    <SidebarMenuItem key={item.path}>
                       <SidebarMenuButton
                         asChild
                         isActive={item.isActive}
-                        tooltip={item.name}
+                        tooltip={item.title}
                       >
-                        <Link href={item.path} className="flex items-center gap-3">
+                        <Link href={item.path || "#"} className="flex items-center gap-3">
                           <item.icon className="h-4 w-4" />
-                          <span>{item.name}</span>
+                          <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </Collapsible>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      ))}
+                    </SidebarMenuItem>
+                  )
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

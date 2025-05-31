@@ -22,11 +22,8 @@ export async function middleware(request: NextRequest) {
   });
 
   // Handle authentication based on route type
-  const isAuthRoute = request.nextUrl.pathname === '/login' || 
-                     request.nextUrl.pathname === '/signup' ||
-                     request.nextUrl.pathname === '/verify-email' || 
-                     request.nextUrl.pathname === '/reset-password' ||
-                     request.nextUrl.pathname.startsWith('/login/reset-password');
+  const isAuthRoute = request.nextUrl.pathname === '/auth' || 
+                     request.nextUrl.pathname.startsWith('/auth');
 
   if (authenticated) {
     // User is authenticated
@@ -40,7 +37,7 @@ export async function middleware(request: NextRequest) {
     // User is not authenticated
     if (!isAuthRoute) {
       // Redirect unauthenticated users to login page with redirect parameter
-      const loginUrl = new URL('/login', request.url);
+      const loginUrl = new URL('/auth', request.url);
       loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
       return NextResponse.redirect(loginUrl);
     }

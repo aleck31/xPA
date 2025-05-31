@@ -56,7 +56,7 @@ export function SignUpForm({ email, setEmail, onSuccess, onError }: SignUpFormPr
       
       onSuccess('Account created successfully! Redirecting to verification page...');
       setTimeout(() => {
-        router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+        router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
       }, 1000);
     } catch (err) {
       if (err instanceof Error) {

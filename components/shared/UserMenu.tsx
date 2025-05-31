@@ -37,7 +37,7 @@ export function UserMenu() {
     try {
       setIsLoggingOut(true);
       await signOut();
-      router.push('/login');
+      router.push('/auth');
     } catch (error) {
       console.error('Error signing out:', error);
       setIsLoggingOut(false);
@@ -97,11 +97,11 @@ export function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push('/profile')}>
+          <DropdownMenuItem onClick={() => router.push('/user/profile')}>
             <User className="mr-2 h-4 w-4" />
             Profile
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push('/preferences')}>
+          <DropdownMenuItem onClick={() => router.push('/user/preferences')}>
             <Settings className="mr-2 h-4 w-4" />
             Preferences
           </DropdownMenuItem>

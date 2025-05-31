@@ -54,18 +54,18 @@ xPA/
 │   │   └── aiProcessor/  # AI processing function
 │   └── backend.ts  # Backend configuration
 ├── app/          # Next.js App Router
-│   ├── page.tsx       # Landing page
+│   ├── (root)       # Home page
 │   ├── layout.tsx     # Root layout
-│   ├── login/         # Login routes
-│   │   └── reset-password/
+│   ├── auth/         # Login routes
+│   │   └── /reset-password/
 │   ├── main/     # Main routes
-│   ├── assistant/     # AI assistant
-│   ├── finance/
+│   ├── knowledge/
 │   ├── schedule/
+│   ├── finance/
 │   └── api/           # API routes
 ├── components/        # Reusable components
 │   ├── ui/       # Shadcn/UI components
-│   ├── login/        # Login components
+│   ├── auth/        # Auth components
 │   ├── finance/      # Finance components
 │   ├── schedule/     # Schedule components
 │   ├── assistant/    # AI assistant components
@@ -120,7 +120,7 @@ XPA_IDENTITY_POOL_ID=your-identity-pool-id
 
 # API Configuration
 NEXT_PUBLIC_GRAPHQL_ENDPOINT=your-graphql-endpoint
-NEXT_PUBLIC_AWS_REGION=your-region
+AWS_REGION=your-region
 
 # AI Configuration
 XPA_BEDROCK_ENDPOINT=your-bedrock-endpoint
@@ -158,9 +158,6 @@ npx ampx deploy --env-name prod
 
 ## Documentation
 
-- [Feature Plan](docs/xPA_Feature_Plan.md): Detailed plan of features for the initial and future versions
-- [System Architecture](docs/System_Architecture.md): Overview of the system architecture and component interactions
-- [Amplify Gen2 + Next.js Guide](docs/amplify_gen2_nextjs_guide.md): Comprehensive guide for Amplify Gen2 and Next.js integration
 
 ## Roadmap
 

@@ -26,7 +26,7 @@ export default function ResetPassword() {
       await resetPassword({ username: email });
       setSuccess(true);
       // Redirecting to the verification code confirmation page
-      router.push(`/login/reset-password/confirm?email=${encodeURIComponent(email)}`);
+      router.push(`/auth/reset-password/confirm?email=${encodeURIComponent(email)}`);
     } catch (err) {
       if (err instanceof Error) {
         switch (err.name) {
@@ -105,7 +105,7 @@ export default function ResetPassword() {
               type="button"
               variant="outline"
               className="w-full mt-2 flex items-center justify-center"
-              onClick={() => router.push('/login')}
+              onClick={() => router.push('/auth')}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Sign In

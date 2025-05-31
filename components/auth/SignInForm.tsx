@@ -68,7 +68,7 @@ export function SignInForm({ email, setEmail, onSuccess, onError }: SignInFormPr
             setError('Please verify your email before signing in');
             // Redirect to verification page after a short delay
             setTimeout(() => {
-              router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+              router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
             }, 2000);
             break;
           default:
@@ -102,7 +102,7 @@ export function SignInForm({ email, setEmail, onSuccess, onError }: SignInFormPr
         <div className="flex justify-between items-center">
           <Label htmlFor="password" className="text-sm font-medium">Password</Label>
           <Link 
-            href="./reset-password" 
+            href="./auth/reset-password" 
             className="text-xs text-primary hover:text-primary/80 hover:underline"
           >
             Forgot password?

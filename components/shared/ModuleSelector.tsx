@@ -46,12 +46,6 @@ export default function ModuleSelector({ currentModule }: ModuleSelectorProps) {
       path: "/",
     },
     {
-      name: "Myners",
-      nameZh: "智能助理",
-      icon: <MessageSquare className="h-5 w-5" />,
-      path: "/assistant",
-    },
-    {
       name: "MindKeeper",
       nameZh: "知识管理",
       icon: <Wallet className="h-5 w-5" />,

@@ -103,7 +103,7 @@ export function AppLayout({
           </section>
           {/* Right sidebar (optional) */}
           {subSidebar && (
-            <aside className="w-64 min-w-[16rem] max-w-[16rem] border-l bg-background hidden lg:block shrink-0">
+            <aside className="w-64 min-w-[16rem] max-w-[16rem] border-l bg-background shrink-0 z-10">
               {subSidebar}
             </aside>
           )}
